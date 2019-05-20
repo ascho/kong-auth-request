@@ -9,7 +9,7 @@ version = "0.1.1-1"
 supported_platforms = {"linux", "macosx"}
 
 source = {
-  url = "",
+  url = "git://github.com/ascho/kong-auth-request",
   tag = "0.1.1"
 }
 
