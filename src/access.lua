@@ -39,17 +39,10 @@ function _M.execute(conf)
         return kong.response.exit(res.status, content)
     end
 
-    local added = false
-    local origin_headers = kong.request.get_headers()
     for _, name in ipairs(conf.auth_response_headers_to_forward) do
         if res.headers[name] then
-            origin_headers[name] = res.headers[name]
-            added = true
+            kong.service.request.set_header(name, res.headers[name])
         end
-    end
-
-    if added then
-        kong.service.request.set_headers(origin_headers)
     end
 end
 
