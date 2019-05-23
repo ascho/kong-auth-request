@@ -48,20 +48,12 @@ end
 
 function _M.new_auth_request(auth_uri)
     local _, host, _, path = unpack(http:parse_uri(auth_uri))
-
+    local headers = kong.request.get_headers()
+    headers["host"] = host
     return {
-        method = "POST",
+        method = "GET",
         path = path,
-        body = cjson.encode({
-            headers = kong.request.get_headers(),
-            uri = kong.request.get_path(),
-            method = kong.request.get_method()
-        }),
-        headers = {
-            host = host,
-            charset = "utf-8",
-            ["content-type"] = "application/json"
-        }
+        headers = headers
     }
 end
 
