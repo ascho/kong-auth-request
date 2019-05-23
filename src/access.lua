@@ -48,15 +48,15 @@ end
 
 function _M.new_auth_request(auth_uri)
     local _, host, _, path = unpack(http:parse_uri(auth_uri))
-    local headers = kong.request.get_headers()
     return {
         method = "GET",
         path = path,
-        headers = kong.table.merge(kong.request.get_headers(), {
+        headers = {
             host = host,
             charset = "utf-8",
-            ["content-type"] = "application/json"
-        }),
+            ["content-type"] = "application/json",
+            authorization = kong.request.get_header("authorization")
+        },
         body = ""
     }
 end
