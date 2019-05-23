@@ -1,12 +1,12 @@
 package = "kong-auth-request"
 
-version = "0.1.2-0"
+version = "0.1.3-0"
 
 supported_platforms = {"linux", "macosx"}
 
 source = {
   url = "git://github.com/ascho/kong-auth-request",
-  tag = "0.1.2"
+  tag = "0.1.3"
 }
 
 description = {
