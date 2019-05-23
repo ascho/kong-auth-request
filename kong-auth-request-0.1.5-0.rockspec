@@ -1,16 +1,16 @@
 package = "kong-auth-request"
 
-version = "0.1.4-0"
+version = "0.1.5-0"
 
 supported_platforms = {"linux", "macosx"}
 
 source = {
   url = "git://github.com/ascho/kong-auth-request",
-  tag = "0.1.4"
+  tag = "0.1.5"
 }
 
 description = {
-  summary = "A Kong plugin that make POST auth request before proxying the original.",
+  summary = "A Kong plugin that make GET auth request before proxying the original.",
   license = "MIT"
 }
 
