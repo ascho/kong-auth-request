@@ -18,7 +18,7 @@ function _M.execute(conf)
         end
     end
 
-    local auth_request = _M.new_auth_request(conf.auth_uri)
+    local auth_request = _M.new_auth_request(conf.auth_uri, conf.origin_request_headers_to_forward_to_auth)
 
     local res, err = client:request(auth_request)
 
@@ -46,17 +46,23 @@ function _M.execute(conf)
     end
 end
 
-function _M.new_auth_request(auth_uri)
+function _M.new_auth_request(auth_uri, origin_request_headers_to_forward_to_auth)
     local _, host, _, path = unpack(http:parse_uri(auth_uri))
+    local headers = {
+        host = host,
+        charset = "utf-8",
+        ["content-type"] = "application/json"
+    }
+    for _, name in ipairs(origin_request_headers_to_forward_to_auth) do
+        local header_val = kong.request.get_header(name)
+        if header_val then
+            headers[name] = header_val
+        end
+    end
     return {
         method = "GET",
         path = path,
-        headers = {
-            host = host,
-            charset = "utf-8",
-            ["content-type"] = "application/json",
-            authorization = kong.request.get_header("authorization")
-        },
+        headers = headers,
         body = ""
     }
 end
