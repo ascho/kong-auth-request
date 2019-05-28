@@ -27,13 +27,14 @@ curl -X POST \
 --data "name=kong-auth-request" \
 --data "config.auth_uri=http://auth.fibery.io/authorize" \
 --data "config.auth_response_headers_to_forward[]=x-authorization"
+--data "config.origin_request_headers_to_forward_to_auth[]=host"
 ```
 
 config parameter | description
 -----------------|--------------
 config.auth_uri  | Plugin make a HTTP GET request with Authorization header to this URL before proxying the original request
 config.auth_response_headers_to_forward | If auth request was successful then plugin takes header names from auth_response_headers_to_forward collection, then finds them in auth response headers and adds them into origin request before proxying it to upstream.
-
+config.origin_request_headers_to_forward_to_auth | Origin request headers to pass to auth uri
 ## Author
 
 Andray Shotkin
