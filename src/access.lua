@@ -18,25 +18,17 @@ function _M.execute(conf)
         end
     end
 
-    local auth_request = _M.new_auth_request(conf.auth_uri, conf.origin_request_headers_to_forward_to_auth)
+    local auth_request = _M.new_auth_request(conf.origin_request_headers_to_forward_to_auth, conf.keepalive_timeout)
 
-    local res, err = client:request(auth_request)
+    local res, err = client:request_uri(conf.auth_uri, auth_request)
 
     if not res then
         kong.log.err(err)
         return kong.response.exit(500, { message = "An unexpected error occurred" })
     end
 
-    local content = res:read_body()
-
-    local ok, err = client:set_keepalive(conf.keepalive)
-    if not ok then
-        kong.log.err(err)
-        return kong.response.exit(500, { message = "An unexpected error occurred" })
-    end
-
     if res.status > 299 then
-        return kong.response.exit(res.status, content)
+        return kong.response.exit(res.status, res.body)
     end
 
     for _, name in ipairs(conf.auth_response_headers_to_forward) do
@@ -46,10 +38,8 @@ function _M.execute(conf)
     end
 end
 
-function _M.new_auth_request(auth_uri, origin_request_headers_to_forward_to_auth)
-    local _, host, _, path = unpack(http:parse_uri(auth_uri))
+function _M.new_auth_request(origin_request_headers_to_forward_to_auth, keepalive_timeout)
     local headers = {
-        host = host,
         charset = "utf-8",
         ["content-type"] = "application/json"
     }
@@ -61,9 +51,9 @@ function _M.new_auth_request(auth_uri, origin_request_headers_to_forward_to_auth
     end
     return {
         method = "GET",
-        path = path,
         headers = headers,
-        body = ""
+        body = "",
+        keepalive_timeout = keepalive_timeout
     }
 end
 
