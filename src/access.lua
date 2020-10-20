@@ -27,6 +27,12 @@ function _M.execute(conf)
         return kong.response.exit(500, { message = "An unexpected error occurred" })
     end
 
+    if conf.auth_signin ~= "" and res.status == 401 then
+        return kong.response.exit(302, "", {
+            ["Location"] = conf.auth_signin .. "?rd=" .. ngx.escape_uri(kong.request.get_scheme() .. "://" .. kong.request.get_host() .. kong.request.get_path_with_query())
+        })
+    end
+
     if res.status > 299 then
         return kong.response.exit(res.status, res.body)
     end
