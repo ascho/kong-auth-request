@@ -28,6 +28,8 @@ function _M.execute(conf)
     end
 
     if res.status > 299 then
+        if conf.redirect_uri then
+            return kong.response.exit(conf.redirect_status_code, ,{["Location"]= conf.redirect_uri})
         return kong.response.exit(res.status, res.body)
     end
 

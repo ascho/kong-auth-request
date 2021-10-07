@@ -5,6 +5,8 @@ return {
         keepalive_timeout = { default = 60000, type = "number" },
         auth_uri = { required = true, type = "string" },
         origin_request_headers_to_forward_to_auth = { type = "array", default = {} },
-        auth_response_headers_to_forward = { type = "array", default = {} }
+        auth_response_headers_to_forward = { type = "array", default = {} },
+        redirect_uri = { required = false. type = "string" },
+        redirect_status_code = { default = 302. type = "number" }
     }
 }
